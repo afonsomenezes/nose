@@ -1,3 +1,0 @@
-import pandas
-csv_path = '' #insert path between the single quotes
-df = pandas.read_csv(csv_path)
