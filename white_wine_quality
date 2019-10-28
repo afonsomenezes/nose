@@ -1,0 +1,54 @@
+#Importing the data
+import pandas as pd 
+path = 'C:\\Users\\(...)\\wine_white.csv'
+df = pd.read_csv(path, sep = ';') 
+df.head() #to get a overview of the data
+
+#Target variable is 'quality' - let's check for the possible values
+from collections import Counter
+Counter(df['quality']) #values from 3 to 9 (the higher the better) and pretty unbalanced classes (6 and 5 quality wines make up to almost 75% of the dataset)
+#let's get a visual representation of the data dispersion
+import matplotlib.pyplot as plt
+import seaborn as sns
+sns.countplot(x = 'quality', data = df)
+plt.show() #visual representation that confirms the previously seen distribution
+df.describe()
+
+#Missing values
+df.isnull().any() #the output is True/False for each column, indicating the presence (absence) of missings with True (False)
+#in this case we saw that there are no missing values
+df.isnull().sum() #would sum the number of missing valuer per column (0 in our case)
+
+#Outliers
+#will analyze each variable individually to check for the presence of outliers
+df.describe() #gives us a clear overview of the values we will encounter
+plt.boxplot(df['fixed acidity']) #will remove all the values above 10
+plt.show() #repeat to visualize each boxplot
+df = df[df['fixed acidity'] <= 10]
+plt.boxplot(df['volatile acidity']) #considering that all the values range from 0 to 1, I will not remove the outliers
+plt.boxplot(df['citric acid']) #values from 0 to 1.5, won't remove any value either
+plt.boxplot(df['residual sugar'])
+df = df[df['residual sugar'] <= 30]
+plt.boxplot(df['chlorides']) #values ranging from o to 0.35
+plt.boxplot(df['free sulfur dioxide'])
+df = df[df['free sulfur dioxide'] <= 125]
+plt.boxplot(df['total sulfur dioxide'])
+df = df[df['total sulfur dioxide'] <= 275]
+plt.boxplot(df['density'])
+plt.boxplot(df['pH'])
+plt.boxplot(df['sulphates'])
+plt.boxplot(df['alcohol'])
+df.describe()
+
+#Correlation for feature selection
+df.corr(method = 'pearson')
+plt.figure(figsize=(12,10))
+cor = df.corr(method = 'pearson')
+sns.heatmap(cor, annot=True, cmap=plt.cm.Reds)
+plt.show()
+#density and residual sugar are pretty correlated 0.83 - will leave density because it is the one with less outliers and is more correlated with the target variable
+#left here - going for a beer
+
+#analyze model as is and standardizing it to compare
+#analyze variables
+
