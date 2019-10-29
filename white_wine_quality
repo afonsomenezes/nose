@@ -12,7 +12,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 sns.countplot(x = 'quality', data = df)
 plt.show() #visual representation that confirms the previously seen distribution
+df.dtypes #floats and integers
 df.describe()
+df['pH'].plot(kind = 'hist', bins = 100) #plotting graphs to check the variables
+plt.xlabel('pH')
+plt.show()
 
 #Missing values
 df.isnull().any() #the output is True/False for each column, indicating the presence (absence) of missings with True (False)
@@ -47,7 +51,21 @@ cor = df.corr(method = 'pearson')
 sns.heatmap(cor, annot=True, cmap=plt.cm.Reds)
 plt.show()
 #density and residual sugar are pretty correlated 0.83 - will leave density because it is the one with less outliers and is more correlated with the target variable
-#left here - going for a beer
+df = df.drop(columns = 'residual sugar')
+
+#separating the independent and the dependent variables
+x = df.iloc[:, 0:10]
+y = df.iloc[:, -1]
+
+#standardizing the variables
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+x_std = sc.fit_transform(x)
+
+#splitting into train and test
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.3) #non standardized variables
+x_std_train, x_std_test, y_train1, y_test1 = train_test_split(x_std, y, test_size = 0.3) #non standardized variables
+
 
 #analyze model as is and standardizing it to compare
 #analyze variables
