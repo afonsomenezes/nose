@@ -123,6 +123,7 @@ plt.figure(figsize=(10,10))
 plt.plot(np.cumsum(explained_variance_ratio), 'ro-')
 plt.grid()
 #the first principal components do not explain much of the variance, therefore I will move on with all the variables
+#to reach 90% variance we would have to use the first 6 principal components
 
 #analyze variables - RF standardized
 #next: quality variable into 0 or 1 (bad or good) - new division to see if it outperforms the previous one
