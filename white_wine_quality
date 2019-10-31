@@ -50,7 +50,7 @@ plt.figure(figsize=(12,10))
 cor = df.corr(method = 'pearson')
 sns.heatmap(cor, annot=True, cmap=plt.cm.Reds)
 plt.show()
-#density and residual sugar are pretty correlated 0.83 - will leave density because it is the one with less outliers and is more correlated with the target variable
+#despite being a small dataset, density and residual sugar are pretty correlated 0.83 - will leave density because it is the one with less outliers and is more correlated with the target variable
 df = df.drop(columns = 'residual sugar')
 
 #separating the independent and the dependent variables
@@ -107,5 +107,22 @@ rf.fit(x_std_train, y_train1)
 rf_predict=rf.predict(x_std_test)
 accuracy_score(y_test1, rf_predict) #0.66 accuracy - slightly better
 
-#analyze variables - RF non standardized
-#check a code to transform the array of the standardized to a data frame
+#preprocessing the standardized data frame
+df_std = pd.DataFrame(x_std) #code to transform the array of the standardized variables to a data frame
+df_std.columns = list(x) #rename the new data frame columns
+
+#PCA - apply it to the standardized variables
+from sklearn.decomposition import PCA
+pca = PCA()
+x_std_pca = pca.fit_transform(x_std)
+#plotting the PCA graph
+explained_variance = np.var(x_pca, axis=0)
+explained_variance_ratio = explained_variance / np.sum(explained_variance)
+np.cumsum(explained_variance_ratio)
+plt.figure(figsize=(10,10))
+plt.plot(np.cumsum(explained_variance_ratio), 'ro-')
+plt.grid()
+#the first principal components do not explain much of the variance, therefore I will move on with all the variables
+
+#analyze variables - RF standardized
+#next: quality variable into 0 or 1 (bad or good) - new division to see if it outperforms the previous one
