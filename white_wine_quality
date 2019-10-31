@@ -126,4 +126,19 @@ plt.grid()
 #to reach 90% variance we would have to use the first 6 principal components
 
 #analyze variables - RF standardized
-#next: quality variable into 0 or 1 (bad or good) - new division to see if it outperforms the previous one
+
+#quality variable into 1, 2 or 3 (bad, good, excellent) - new division to see if it outperforms the previous one
+grade = []
+for i in df['quality']:
+    if i <= 5:
+        grade.append('1')
+    elif i > 5 & i <= 7:
+        grade.append('2')
+    else:
+        grade.append('3')
+df['grade'] = grade
+
+#separating the variables
+x = df.iloc[:, 0:10]
+y = df.iloc[:, -1]
+
