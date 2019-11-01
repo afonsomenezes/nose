@@ -126,19 +126,47 @@ plt.grid()
 #to reach 90% variance we would have to use the first 6 principal components
 
 #analyze variables - RF standardized
+import eli5
+from eli5.sklearn import PermutationImportance
+perm = PermutationImportance(rf, random_state=1).fit(x_std_test, y_test)
+eli5.show_weights(perm) #only available in Jupyter Notebook
+
+from sklearn.metrics import roc_curve, auc #roc_curve only available for binary target variables
+import shap
+from pdpbox import pdp, info_plots
 
 #quality variable into 1, 2 or 3 (bad, good, excellent) - new division to see if it outperforms the previous one
 grade = []
 for i in df['quality']:
     if i <= 5:
         grade.append('1')
-    elif i > 5 & i <= 7:
+    elif i > 5 and i <= 7:
         grade.append('2')
     else:
         grade.append('3')
 df['grade'] = grade
+df = df.drop(columns = 'quality')
 
 #separating the variables
 x = df.iloc[:, 0:10]
 y = df.iloc[:, -1]
 
+#standardizing variables
+x_std = StandardScaler().fit_transform(x)
+
+x_std_train, x_std_test, y_train, y_test = train_test_split(x_std, y, test_size = 0.3)
+
+knn = KNeighborsClassifier(n_neighbors = 3)
+knn.fit(x_std_train, y_train)
+y_pred = knn.predict(x_std_test)
+accuracy_score(y_test, y_pred) #0.72 - best accuracy so far
+
+dt = DecisionTreeClassifier()
+dt.fit(x_std_train,y_train)
+dt_predict = dt.predict(x_std_test)
+accuracy_score(y_test, dt_predict) #0.72
+
+rf = RandomForestClassifier()
+rf.fit(x_std_train, y_train)
+rf_pred = rf.predict(x_std_test)
+accuracy_score(y_test, rf_pred) #0.8 accuracy, best one so far
