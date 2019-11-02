@@ -125,12 +125,6 @@ plt.grid()
 #the first principal components do not explain much of the variance, therefore I will move on with all the variables
 #to reach 90% variance we would have to use the first 6 principal components
 
-#analyze variables - RF standardized
-import eli5
-from eli5.sklearn import PermutationImportance
-perm = PermutationImportance(rf, random_state=1).fit(x_std_test, y_test)
-eli5.show_weights(perm) #only available in Jupyter Notebook
-
 from sklearn.metrics import roc_curve, auc #roc_curve only available for binary target variables
 import shap
 from pdpbox import pdp, info_plots
